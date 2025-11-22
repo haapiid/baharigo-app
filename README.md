@@ -47,6 +47,7 @@ Ikuti langkah ini untuk menjalankan aplikasi di komputer lokal Anda:
 3. **Setup Enviroment**
     - Copy file .env.example menjadi .env.
     - Atur koneksi database PostgreSQL di .env:
+    ```bash
     DB_CONNECTION=pgsql
     DB_HOST=127.0.0.1
     DB_PORT=5432
