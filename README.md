@@ -1,59 +1,74 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Aplikasi Pemesanan Travel (Laravel 12)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplikasi pemesanan tiket travel berbasis web yang dibangun menggunakan **Laravel 12** (Fullstack Blade). Aplikasi ini mencakup fitur lengkap untuk Admin (Manajemen Jadwal & Laporan) dan Penumpang (Booking & Pembayaran).
 
-## About Laravel
+## 🚀 Fitur Utama
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### 1. Admin
+- **Manajemen Jadwal:** CRUD (Create, Read, Update, Delete) jadwal travel.
+- **Laporan Penumpang:** Melihat statistik jumlah penumpang per jadwal.
+- **Detail Penumpang:** Melihat daftar nama penumpang dalam satu keberangkatan.
+- **Dashboard Statistik:** Ringkasan data operasional.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### 2. Penumpang
+- **Pencarian Tiket:** Melihat daftar jadwal travel yang tersedia (Real-time kuota).
+- **Validasi Kuota Atomic:** Sistem otomatis mencegah *over-booking* menggunakan `lockForUpdate` (Database Transaction).
+- **Booking & Pembayaran:** Upload bukti transfer untuk verifikasi.
+- **Cetak Tiket:** Download Invoice/E-Ticket dalam bentuk PDF.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 3. Keamanan & Teknis
+- **Core Framework:** Laravel 12.x
+- **Autentikasi:** Laravel Breeze (Session Based untuk Web, Sanctum Ready untuk API).
+- **Database:** PostgreSQL 16+
+- **Frontend:** Blade Templates + Tailwind CSS.
+- **API:** RESTful Endpoint tersedia di `/api/schedules` (Support Mobile App Integration).
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## 🛠️ Cara Instalasi
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Ikuti langkah ini untuk menjalankan aplikasi di komputer lokal Anda:
 
-## Laravel Sponsors
+### Prasyarat
+- PHP >= 8.2 (Direkomendasikan PHP 8.3)
+- Composer
+- PostgreSQL
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Langkah-langkah
 
-### Premium Partners
+1. **Clone Repository**
+   ```bash
+   git clone <link-repo-anda>
+   cd travel-app
+2. **Install Dependencies**
+    ```bash
+    composer install
+    npm install && npm run build
+3. **Setup Enviroment**
+    - Copy file .env.example menjadi .env.
+    - Atur koneksi database PostgreSQL di .env:
+    DB_CONNECTION=pgsql
+    DB_HOST=127.0.0.1
+    DB_PORT=5432
+    DB_DATABASE=travel_laravel
+    DB_USERNAME=postgres
+    DB_PASSWORD=root
+4. **Generate Key & Migrasi Database**
+    ```bash
+    php artisan key:generate
+    php artisan migrate:fresh --seed
+    (Perintah --seed akan otomatis membuat akun Admin dan Penumpang dummy).
+5. **Jalankan Server**
+    ```bash
+    php artisan serve
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+👤 Akun Testing (Default)
+Gunakan akun ini untuk mencoba aplikasi:
+Role,Email,Password
+Admin,admin@travel.com,password
+Penumpang,user@travel.com,password
 
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Highlight Teknis
+-   Concurrency Control: Menggunakan DB::transaction dan lockForUpdate() pada proses booking untuk mencegah kuota minus saat dipesan bersamaan oleh banyak user (Race Condition Handling).
+-   Clean Architecture: Pemisahan logic yang jelas antara Controller, Model, dan View, serta penggunaan Middleware IsAdmin untuk proteksi Route.
+-   PDF Generation: Integrasi barryvdh/laravel-dompdf untuk mencetak tiket.

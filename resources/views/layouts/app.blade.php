@@ -5,32 +5,61 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        <title>{{ config('app.name', 'BahariGo') }}</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <link href="https://fonts.bunny.net/css?family=inter:300,400,500,600,700&display=swap" rel="stylesheet" />
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        
+        <style>
+            .navbar-scrolled {
+                @apply bg-white/95 backdrop-blur-sm shadow-sm;
+            }
+            .nav-link-hover {
+                @apply relative transition-all duration-300;
+            }
+            .nav-link-hover::after {
+                content: '';
+                @apply absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300;
+            }
+            .nav-link-hover:hover::after {
+                @apply w-full;
+            }
+        </style>
     </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
-            @include('layouts.navigation')
+    <body class="font-sans antialiased bg-white">
+        @include('layouts.navigation')
 
-            <!-- Page Heading -->
-            @isset($header)
-                <header class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endisset
+        <!-- Page Content -->
+        <main class="min-h-screen">
+            {{ $slot }}
+        </main>
 
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
-        </div>
+        <script>
+            // Sticky navbar dengan efek transparansi
+            window.addEventListener('scroll', function() {
+                const navbar = document.getElementById('main-navbar');
+                if (window.scrollY > 100) {
+                    navbar.classList.add('navbar-scrolled');
+                    navbar.classList.remove('bg-transparent');
+                } else {
+                    navbar.classList.remove('navbar-scrolled');
+                    navbar.classList.add('bg-transparent');
+                }
+            });
+
+            // Inisialisasi state navbar saat load
+            document.addEventListener('DOMContentLoaded', function() {
+                const navbar = document.getElementById('main-navbar');
+                if (window.scrollY > 100) {
+                    navbar.classList.add('navbar-scrolled');
+                } else {
+                    navbar.classList.add('bg-transparent');
+                }
+            });
+        </script>
     </body>
 </html>
